@@ -1,5 +1,5 @@
 {
-  "name": "auth",
+  "name": "tickets",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -21,7 +21,7 @@
     "@types/cookie-session": "^2.0.42",
     "@types/express": "^4.17.11",
     "@types/jsonwebtoken": "^8.5.0",
-    "@vladislovetickets/common": "^1.0.3",
+    "@vladislovetickets/common": "^1.0.4",
     "cookie-session": "^1.4.0",
     "express": "^4.17.1",
     "express-async-errors": "^3.1.1",
