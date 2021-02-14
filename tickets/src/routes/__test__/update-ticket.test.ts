@@ -1,6 +1,7 @@
 import request from "supertest";
 import { app } from "../../app";
 import mongoose from "mongoose";
+import { natsWrapper } from "../../nats-wrapper";
 
 const createId = () => {
   return new mongoose.Types.ObjectId().toHexString();
@@ -90,4 +91,20 @@ it("returns 400 if user supplied wrong price or title", async () => {
       price: -1,
     })
     .expect(400);
+});
+
+it("publishes an event", async () => {
+  const ticket = await createTicket();
+  await request(app)
+    .put("/api/tickets")
+    .set("Cookie", await global.signin(userCred))
+    .send({
+      id: ticket.id,
+      price: 20,
+      title: "new Title",
+    })
+    .expect(200);
+  const res = await request(app).get(`/api/tickets/${ticket.id}`).expect(200);
+
+  expect(natsWrapper.client.publish).toHaveBeenCalledTimes(2);
 });
