@@ -26,7 +26,6 @@ const userSchema = new Schema<UserDoc>(
         delete ret._id;
         delete ret.password;
       },
-      versionKey: false,
     },
   }
 );
