@@ -14,7 +14,7 @@ it("correct user signin should send correct user data", async () => {
     });
 
   await request(app)
-    .get("/api/users/signin")
+    .post("/api/users/signin")
     .send({
       email: "test@test.com",
       password: "password",
@@ -24,7 +24,7 @@ it("correct user signin should send correct user data", async () => {
 
 it("fails if user does not exist", async () => {
   await request(app)
-    .get("/api/users/signin")
+    .post("/api/users/signin")
     .send({
       email: "test@test.com",
       password: "password",
