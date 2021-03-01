@@ -15,6 +15,8 @@ router.post(
   validateRequest,
   async (req: Request, res: Response) => {
     const { email, password } = req.body;
+    console.log(email);
+    console.log(password);
     const user = await User.findOne({ email });
     if (!user) {
       throw new BadRequestError("No such user");
