@@ -8,6 +8,7 @@ const createTicket = async (price: number, title: string) => {
   const ticket = new Ticket({
     price,
     title,
+    version: 0,
   });
   await ticket.save();
   return ticket;

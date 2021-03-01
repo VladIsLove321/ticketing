@@ -4,9 +4,13 @@ interface TicketInterface {
   title: string;
   price: number;
   userId: string;
+  orderId?: string;
 }
 
-type TicketDoc = Document & TicketInterface;
+type TicketDoc = Document &
+  TicketInterface & {
+    version: number;
+  };
 
 const ticketSchema = new Schema<TicketDoc>(
   {
@@ -22,8 +26,13 @@ const ticketSchema = new Schema<TicketDoc>(
       type: String,
       required: true,
     },
+    orderId: {
+      type: String,
+    },
   },
   {
+    optimisticConcurrency: true,
+    versionKey: "version",
     toJSON: {
       transform(doc, ret) {
         ret.id = ret._id;

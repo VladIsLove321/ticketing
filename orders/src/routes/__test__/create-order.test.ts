@@ -3,6 +3,7 @@ import { app } from "../../app";
 import mongoose from "mongoose";
 import { Order, OrderStatus } from "../../models/order";
 import { Ticket } from "../../models/ticket";
+import { natsWrapper } from "../../nats-wrapper";
 
 it("return an error if ticket does not exist", async () => {
   const ticketId = mongoose.Types.ObjectId();
@@ -20,6 +21,7 @@ it("return an error if ticket is already reserved", async () => {
   const ticket = new Ticket({
     title: "concert",
     price: 20,
+    version: 0,
   });
   await ticket.save();
 
@@ -45,6 +47,7 @@ it("reserves a ticket", async () => {
   const ticket = new Ticket({
     title: "concert",
     price: 20,
+    version: 0,
   });
   await ticket.save();
   const response = await request(app)
@@ -58,4 +61,22 @@ it("reserves a ticket", async () => {
   expect(order?.ticket.title).toEqual(ticket.title);
 });
 
-it.todo("emits an order when ticket created");
+it("emits an order when ticket created", async () => {
+  const ticket = new Ticket({
+    title: "concert",
+    price: 20,
+    version: 0,
+  });
+  await ticket.save();
+  const response = await request(app)
+    .post("/api/orders")
+    .set("Cookie", await global.signin())
+    .send({
+      ticketId: ticket.id,
+    })
+    .expect(201);
+  const order = await Order.findById(response.body.id).populate("ticket");
+  expect(order?.ticket.title).toEqual(ticket.title);
+
+  expect(natsWrapper.client.publish).toHaveBeenCalledTimes(1);
+});

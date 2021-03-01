@@ -11,7 +11,10 @@ interface OrderInterface {
   ticket: TicketDoc;
 }
 
-type OrderDoc = Document & OrderInterface;
+type OrderDoc = {
+  version: number;
+} & Document &
+  OrderInterface;
 
 const orderSchema = new Schema<OrderDoc>(
   {
@@ -34,6 +37,8 @@ const orderSchema = new Schema<OrderDoc>(
     },
   },
   {
+    optimisticConcurrency: true,
+    versionKey: "version",
     toJSON: {
       transform(doc, ret) {
         ret.id = ret._id;

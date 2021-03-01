@@ -6,6 +6,7 @@ it("fetches an order", async () => {
   const ticket = new Ticket({
     title: "title",
     price: 20,
+    version: 0,
   });
   await ticket.save();
   const user = await global.signin();
@@ -28,6 +29,7 @@ it("return an error if one user tries to fetch another user order", async () => 
   const ticket = new Ticket({
     title: "title",
     price: 20,
+    version: 0,
   });
   await ticket.save();
   const user = await global.signin();
